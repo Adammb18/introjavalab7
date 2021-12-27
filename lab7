@@ -1,0 +1,416 @@
+Script started on 2021-11-14 22:24:25-05:00 [TERM="xterm-256color" TTY="/dev/pts/11" COLUMNS="80" LINES="24"]
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ cat Money.java
+[?2004l/**
+   This class represents nonnegative amounts of money.
+*/
+
+public class Money
+{
+   // The number of dollars
+   private long dollars;
+
+   // The number of cents
+   private long cents;
+
+   /**
+      Constructor
+      @param amount The amount in decimal format.
+   */
+
+   public Money(double amount)
+   {
+      if (amount < 0)
+      {
+         System.out.println("Error: Negative amounts " +
+                            "of money are not allowed.");
+         System.exit(0);
+      }
+      else
+      {
+         long allCents = Math.round(amount * 100);
+         dollars = allCents / 100;
+         cents = allCents % 100;
+      }
+   }
+
+   // ADD LINES FOR TASK #1 HERE
+   // Document and write a copy constructor
+   public Money(Money newmoney){
+      this.dollars=newmoney.dollars;
+      this.cents=newmoney.cents;
+
+   }
+   /**
+      The add method
+      @param otherAmount The amount of money to add.
+      @return The sum of the calling Money object
+              and the parameter Money object.
+   */
+
+   public Money add(Money otherAmount)
+   {
+      Money sum = new Money(0);
+
+      sum.cents = this.cents + otherAmount.cents;
+
+      long carryDollars = sum.cents / 100;
+
+      sum.cents = sum.cents % 100;
+
+      sum.dollars = this.dollars +
+                    otherAmount.dollars +
+                    carryDollars;
+
+      return sum;
+   }
+
+   /**
+      The subtract method
+      @param amount The amount of money to subtract.
+      @return The difference between the calling Money
+              object and the parameter Money object.
+   */
+
+   public Money subtract (Money amount)
+   {
+      Money difference = new Money(0);
+
+      if (this.cents < amount.cents)
+      {
+         this.dollars = this.dollars - 1;
+         this.cents = this.cents + 100;
+      }
+
+      difference.dollars = this.dollars - amount.dollars;
+      difference.cents = this.cents - amount.cents;
+
+      return difference;
+   }
+
+   /**
+      The compareTo method
+      @param amount The amount of money to compare against.
+      @return -1 if the dollars and the cents of the
+              calling object are less than the dollars and
+              the cents of the parameter object.
+              0 if the dollars and the cents of the calling
+              object are equal to the dollars and cents of
+              the parameter object.
+              1 if the dollars and the cents of the calling
+              object are more than the dollars and the
+              cents of the parameter object.
+   */
+
+   public int compareTo(Money amount)
+   {
+      int value;
+
+      if(this.dollars < amount.dollars)
+         value = -1;
+      else if (this.dollars > amount.dollars)
+         value = 1;
+      else if (this.cents < amount.cents)
+         value = -1;
+      else if (this.cents > amount.cents)
+         value = 1;
+      else
+         value = 0;
+
+      return value;
+   }
+
+   // ADD LINES FOR TASK #2 HERE
+   // Document and write an equals method
+   // Document and write a toString method
+   
+   public boolean equals(Object obj){
+      Money newmoney = (Money)obj;
+      return ((newmoney.cents == this.cents) && (newmoney.dollars == this.dollars));
+   }
+
+   
+   public String toString(){
+      if(cents<10)
+         return "$"+dollars+".0"+cents;
+      else
+      return "$"+dollars+"."+cents;
+   }
+}
+}[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ javac Money.java
+[?2004lMoney.java:137: error: class, interface, or enum expected
+}
+^
+1 error
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ jav[K[K[Kjavac Money.java[2Pcat[C[C[C[C[C[C[C[C[C[C[C[2@javac[C[C[C[C[C[C[C[C[C[C[C[2Pcat[C[C[C[C[C[C[C[C[C[C[C[2@javac[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kjava Money
+[?2004lError: Could not find or load main class Money
+Caused by: java.lang.ClassNotFoundException: Money
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ cat MoneyDemo.java
+[?2004l/**
+   This program demonstrates the Money class.
+*/
+
+public class MoneyDemo
+{
+   public static void main(String[] args)
+   {
+      // Named constants
+      final int BEGINNING = 500; // Beginning balance
+      final Money FIRST_AMOUNT  = new Money(10.02);
+      final Money SECOND_AMOUNT = new Money(10.02);
+      final Money THIRD_AMOUNT  = new Money(10.88);
+
+      // Create an instance of the Money class with
+      // the beginning balance.
+      Money balance = new Money(BEGINNING);
+
+      // Display the current balance.
+      System.out.println("The current amount is " +
+                         balance.toString());
+
+      // Add the second amount to the balance
+      // and display the results.
+      balance = balance.add(SECOND_AMOUNT);
+      System.out.println("Adding " + SECOND_AMOUNT +
+                         " gives " + balance.toString());
+
+      // Subtract the third amount from the balance
+      // and display the results.
+      balance = balance.subtract(THIRD_AMOUNT);
+      System.out.println("Subtracting " + THIRD_AMOUNT +
+                         " gives " + balance.toString());
+
+      // Determine if the second amount equals
+      // the first amount and store the result.
+      boolean equal = SECOND_AMOUNT.equals(FIRST_AMOUNT);
+
+      // Display the result.
+      if(equal)
+      {
+         // The first and second amounts are equal.
+         System.out.println(SECOND_AMOUNT + " equals " +
+                            FIRST_AMOUNT);
+      }
+      else
+      {
+         // The first and second amounts are not equal.
+         System.out.println(SECOND_AMOUNT +
+                            " does not equal " +
+                            FIRST_AMOUNT);
+      }
+
+      // Determine if the third amount equals
+      // the first amount and store the result.
+      equal = THIRD_AMOUNT.equals(FIRST_AMOUNT);
+
+      // Display the result.
+      if(equal)
+      {
+         // The third and first amounts are equal.
+         System.out.println(THIRD_AMOUNT + " equals " +
+                            FIRST_AMOUNT);
+      }
+      else
+      {
+         // The third and first amounts are not equal.
+         System.out.println(THIRD_AMOUNT +
+                            " does not equal " +
+                            FIRST_AMOUNT);
+      }
+   }
+}[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ javac MoneyDemo.java
+[?2004l./Money.java:137: error: class, interface, or enum expected
+}
+^
+1 error
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ java MoneyDemo
+[?2004lError: Could not find or load main class MoneyDemo
+Caused by: java.lang.ClassNotFoundException: MoneyDemo
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ j[Kcat Address.java
+[?2004l/**
+   This class defines an address using a street,
+   city, state, and zipcode.
+*/
+
+public class Address
+{
+   // The street number and name
+   private String street;
+
+   // The city in which the address is located
+   private String city;
+
+   // The state in which the address is located
+   private String state;
+
+   // The zip code associated with the city and street
+   private String zip;
+
+   /**
+      Constructor
+      @param road Describes the street number and name.
+      @param town Describes the city.
+      @param st Describes the state.
+      @param zipCode Describes the zip code.
+   */
+
+   public Address(String road, String town, String st,
+                  String zipCode)
+   {
+      street = road;
+      city = town;
+      state = st;
+      zip = zipCode;
+   }
+
+   /**
+      The toString method
+      @return Information about the address.
+   */
+
+   public String toString()
+   {
+      return (street + ", " + city +
+              ", " + state + " " + zip);
+   }
+}[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ javac Address.java
+[?2004l[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ java Address
+[?2004lError: Main method not found in class Address, please define the main method as:
+   public static void main(String[] args)
+or a JavaFX application class must extend javafx.application.Application
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ jav[K[K[Kcat Person.java
+[?2004l/**
+   This class defines a person by name and address.
+*/
+
+public class Person
+{
+   // The person's last name
+   private String lastName;
+
+   // The person's first name
+   private String firstName;
+
+   // The person's address
+   private Address home;
+
+   /**
+      Constructor
+      @param last The person's last name.
+      @param first The person's first name.
+      @param residence The person's address.
+   */
+
+   public Person(String last, String first,
+                 Address residence)
+   {
+      lastName = last;
+      firstName = first;
+      home = residence;
+   }
+
+   /**
+      The toString method
+      @return Information about the person.
+   */
+
+   public String toString()
+   {
+      return(firstName + " " + lastName +
+             ", " + home.toString());
+   }
+}[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ javac Person,[K.java
+[?2004l[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ java Person
+[?2004lError: Main method not found in class Person, please define the main method as:
+   public static void main(String[] args)
+or a JavaFX application class must extend javafx.application.Application
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ cat [K[K[K[Kjava Personc Person.java[2Pcat[C[C[C[C[C[C[C[C[C[C[C[C[3Pjava Addressc Address.java[2Pcat[C[C[C[C[C[C[C[C[C[C[C[C[C[2Pjava MoneyDemoc MoneyDemo.java[2Pcat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[8Pjava Moneyc Money.java[2Pcat[C[C[C[C[C[C[C[C[C[C[C./system_math_bsvi system_math_bs.c[3P./system_math_bs[2Pcat Money.java[2@javac[C[C[C[C[C[C[C[C[C[C[C[6P Moneycat MoneyDemo.java[2@javac[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6P MoneyDemocat Address.java[2@javac[C[C[C[C[C[C[C[C[C[C[C[C[C[6P Addresscat Person.java[2@javac[C[C[C[C[C[C[C[C[C[C[C[C[6P Person[Kcat CreditCardDemo.java
+[?2004l/**
+   This program demonstrates the CreditCard class.
+*/
+
+public class CreditCardDemo
+{
+   public static void main(String[] args)
+   {
+      // Named constants
+      final Money CREDIT_LIMIT  = new Money(1000);
+      final Money FIRST_AMOUNT  = new Money(200);
+      final Money SECOND_AMOUNT = new Money(10.02);
+      final Money THIRD_AMOUNT  = new Money(25);
+      final Money FOURTH_AMOUNT = new Money(990);
+
+      // Create an instance of the Person class.
+      Person owner = new Person("Christie", "Diane",
+                     new Address("237J Harvey Hall",
+                     "Menomonie", "WI", "54751"));
+
+      // Create an instance of the CreditCard class.
+      CreditCard visa = new CreditCard(owner,
+                        CREDIT_LIMIT);
+
+      // Display the credit card information.
+      System.out.println(visa.getPersonals());
+      System.out.println("Balance: " + visa.getBalance());
+      System.out.println("Credit Limit: " +
+                         visa.getCreditLimit());
+
+      System.out.println();   // To print a new line
+
+      // Attempt to charge the first amount and
+      // display the results.
+      System.out.println("Attempting to charge " +
+                         FIRST_AMOUNT);
+      visa.charge(FIRST_AMOUNT);
+      System.out.println("Balance: " + visa.getBalance());
+
+      System.out.println();   // To print a new line
+
+      // Attempt to charge the second amount and
+      // display the results.
+      System.out.println("Attempting to charge " +
+                         SECOND_AMOUNT);
+      visa.charge(SECOND_AMOUNT);
+      System.out.println("Balance: " + visa.getBalance());
+
+      System.out.println();   // To print a new line
+
+      // Attempt to pay using the third amount and
+      // display the results.
+      System.out.println("Attempting to pay " +
+                         THIRD_AMOUNT);
+      visa.payment(THIRD_AMOUNT);
+      System.out.println("Balance: " + visa.getBalance());
+
+      System.out.println();   // To print a new line
+
+      // Attempt to charge using the fourth amount and
+      // display the results.
+      System.out.println("Attempting to charge " +
+                         FOURTH_AMOUNT);
+      visa.charge(FOURTH_AMOUNT);
+      System.out.println("Balance: " + visa.getBalance());
+   }
+}[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ javac CreditCardDemo.java
+[?2004l./Money.java:137: error: class, interface, or enum expected
+}
+^
+CreditCardDemo.java:22: error: cannot find symbol
+      CreditCard visa = new CreditCard(owner,
+      ^
+  symbol:   class CreditCard
+  location: class CreditCardDemo
+CreditCardDemo.java:22: error: cannot find symbol
+      CreditCard visa = new CreditCard(owner,
+                            ^
+  symbol:   class CreditCard
+  location: class CreditCardDemo
+3 errors
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ java CreditCardDemo
+[?2004lError: Could not find or load main class CreditCardDemo
+Caused by: java.lang.ClassNotFoundException: CreditCardDemo
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ end
+[?2004lbash: end: command not found
+[?2004h]0;bisso115@charlie: ~/Desktop[01;32mbisso115@charlie[00m:[01;34m~/Desktop[00m$ exit
+[?2004lexit
+
+Script done on 2021-11-14 22:28:10-05:00 [COMMAND_EXIT_CODE="127"]
